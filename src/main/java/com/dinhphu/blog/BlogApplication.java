@@ -50,8 +50,8 @@ public class BlogApplication {
 //			System.out.println(this.userService.findByUsername("dinhphu493"));
 
 //			User newUser = new User("useridNew","dinhNew","phuNew","dinhphuNew","123New","Newdinhphu@gmail.com","new",null,null,"ADMIN",null,true,false);
-		User deleteUser= this.userService.findById(6L);
-			this.userService.delete(deleteUser);
+//		User deleteUser= this.userService.findById(6L);
+//			this.userService.delete(deleteUser);
 		};
 	}
 }
