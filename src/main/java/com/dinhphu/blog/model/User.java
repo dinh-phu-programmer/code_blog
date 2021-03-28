@@ -1,5 +1,7 @@
 package com.dinhphu.blog.model;
 
+import com.dinhphu.blog.model.root.RootClass;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -13,7 +15,7 @@ import java.util.Objects;
                 @UniqueConstraint(name = "username_uniqueConstraint", columnNames = "username")
         }
 )
-public class User implements Serializable {
+public class User extends RootClass implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, updatable = false)
