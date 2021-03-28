@@ -15,16 +15,9 @@ import java.util.Set;
 @Transactional
 public class UserServiceImpl extends CommonAction<User,Long,UserDao>  implements UserService {
 
-    private UserDao userDao;
-
     @Autowired
     public UserServiceImpl(UserDao userDao) {
         super(userDao);
-    }
-
-    @Override
-    public void setJpaRepository(UserDao userDao) {
-        this.userDao=userDao;
     }
 
     @Override
@@ -34,12 +27,22 @@ public class UserServiceImpl extends CommonAction<User,Long,UserDao>  implements
 
     @Override
     public User findByUsername(String username) {
-        return null;
+        User foundUser= this.jpaRepository.findByUsername(username);
+        if (foundUser != null){
+            return foundUser;
+        }else{
+            return null;
+        }
     }
 
     @Override
     public User findByEmail(String email) {
-        return null;
+        User foundUser = this.jpaRepository.findByEmail(email);
+        if (foundUser != null){
+            return foundUser;
+        }else{
+            return null;
+        }
     }
 
     @Override

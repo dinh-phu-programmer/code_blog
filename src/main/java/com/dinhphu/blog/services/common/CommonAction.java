@@ -12,13 +12,13 @@ import static com.dinhphu.blog.constant.ExceptionMessageConstant.*;
 
 public abstract class CommonAction<T extends RootClass, ID extends Number, E extends JpaRepository> {
 
-    private E jpaRepository;
+    protected E jpaRepository;
 
     public CommonAction(E jpaRepository) {
         this.jpaRepository = jpaRepository;
     }
 
-    public abstract void setJpaRepository(E obj);
+//    public abstract void setJpaRepository(E obj);
 
     public T save(T object) {
         return (T) jpaRepository.save(object);
