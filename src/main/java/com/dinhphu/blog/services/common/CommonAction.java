@@ -1,6 +1,7 @@
 package com.dinhphu.blog.services.common;
 
 import com.dinhphu.blog.constant.ExceptionMessageConstant;
+import com.dinhphu.blog.exception.specific.ObjectNotFoundException;
 import com.dinhphu.blog.exception.specific.UserNotFoundException;
 import com.dinhphu.blog.model.root.RootClass;
 import org.springframework.data.domain.Page;
@@ -29,10 +30,13 @@ public abstract class CommonAction<T extends RootClass, ID extends Number, E ext
         return (T) jpaRepository.save(object);
     }
 
-    public T update(T object, ID id) {
-        T current =findById(id);
-        Long currentID= current.getId();
-        current=object;
+    public T update(T object, ID id) throws ObjectNotFoundException {
+        T current = null;
+
+        current = findById(id);
+
+        Long currentID = current.getId();
+        current = object;
         current.setId(currentID);
         return (T) jpaRepository.save(current);
     }
@@ -42,8 +46,11 @@ public abstract class CommonAction<T extends RootClass, ID extends Number, E ext
         return object;
     }
 
-    public T delete(ID id) {
-        T current= findById(id);
+    public T delete(ID id) throws ObjectNotFoundException {
+        T current = null;
+
+        current = findById(id);
+
         this.jpaRepository.deleteById(id);
         return current;
     }
@@ -52,22 +59,24 @@ public abstract class CommonAction<T extends RootClass, ID extends Number, E ext
         return this.jpaRepository.findAll();
     }
 
-    public T findById(ID id) {
-        T current=null;
-        try {
-            current = (T) this.jpaRepository.findById(id).orElseThrow(
-                    () -> new UserNotFoundException(USER_NOT_FOUND_BY_ID + id)
-            );
-        } catch (Throwable e) {
-            e.printStackTrace();
+    public T findById(ID id) throws ObjectNotFoundException {
+
+        Optional<T> obj = this.jpaRepository.findById(id);
+
+        if (!obj.isPresent()) {
+            throw new ObjectNotFoundException(OBJECT_NOT_FOUND_EXCEPTION + id);
         }
-        return current;
+
+        return obj.get();
+
+
     }
 
-    public Page<T> findAllWithPage(int page, int size, Optional<String> sortBy){
-        String sort=sortBy.orElse("id");
-        Pageable pageable= PageRequest.of(page,size, Sort.by(sort).descending());;
-        Page<T> obj=this.jpaRepository.findAll(pageable);
+    public Page<T> findAllWithPage(int page, int size, Optional<String> sortBy) {
+        String sort = sortBy.orElse("id");
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort).descending());
+
+        Page<T> obj = this.jpaRepository.findAll(pageable);
         return obj;
     }
 //    public abstract Page<T> findAllWithPage(int page, int size, Optional<String> sortBy);

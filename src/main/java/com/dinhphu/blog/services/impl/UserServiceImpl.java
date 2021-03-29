@@ -1,14 +1,13 @@
 package com.dinhphu.blog.services.impl;
 
 import com.dinhphu.blog.dao.UserDao;
+import com.dinhphu.blog.exception.specific.ObjectNotFoundException;
 import com.dinhphu.blog.model.User;
 import com.dinhphu.blog.services.UserService;
 import com.dinhphu.blog.services.common.CommonAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -55,8 +54,8 @@ public class UserServiceImpl extends CommonAction<User,Long,UserDao>  implements
     }
 
     @Override
-    public User update(User object, Long aLong) {
-        return super.update(object, aLong);
+    public User update(User object, Long id) throws ObjectNotFoundException {
+        return super.update(object, id);
     }
 
     @Override
@@ -65,8 +64,8 @@ public class UserServiceImpl extends CommonAction<User,Long,UserDao>  implements
     }
 
     @Override
-    public User delete(Long aLong) {
-        return super.delete(aLong);
+    public User delete(Long id) throws ObjectNotFoundException {
+        return super.delete(id);
     }
 
     @Override
@@ -75,8 +74,9 @@ public class UserServiceImpl extends CommonAction<User,Long,UserDao>  implements
     }
 
     @Override
-    public User findById(Long aLong) {
-        return super.findById(aLong);
+    public User findById(Long id) throws ObjectNotFoundException {
+
+        return super.findById(id);
     }
 
     @Override

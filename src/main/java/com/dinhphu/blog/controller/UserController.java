@@ -1,17 +1,15 @@
 package com.dinhphu.blog.controller;
 
+import com.dinhphu.blog.exception.specific.ObjectNotFoundException;
 import com.dinhphu.blog.model.User;
 import com.dinhphu.blog.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.xml.ws.Response;
 import java.util.Optional;
 
 @RestController
@@ -35,6 +33,12 @@ public class UserController {
 
         Page<User> users= this.userService.findAllWithPage(page,size,sortBy);
         return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> findUserById(@PathVariable Long id) throws ObjectNotFoundException {
+        User user= this.userService.findById(id);
+        return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
 }
