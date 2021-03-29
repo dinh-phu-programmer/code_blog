@@ -5,8 +5,10 @@ import com.dinhphu.blog.exception.specific.EmailExistException;
 import com.dinhphu.blog.exception.specific.ObjectNotFoundException;
 import com.dinhphu.blog.exception.specific.UserExistException;
 import com.dinhphu.blog.model.User;
+import com.dinhphu.blog.model.dto.UserDTO;
 import com.dinhphu.blog.services.UserService;
 import com.dinhphu.blog.services.common.CommonAction;
+import com.dinhphu.blog.util.UserTransferUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 
@@ -29,13 +31,15 @@ public class UserServiceImpl extends CommonAction<User,Long,UserDao>  implements
     }
 
     @Override
-    public User register(User user) throws UserExistException, EmailExistException {
-        validateRegisterUser(user);
+    public User register(UserDTO userDTO) throws UserExistException, EmailExistException {
+        validateRegisterUser(userDTO);
+        //do logic register here
 
+        User user = UserTransferUtils.userDtoToUser(userDTO);
         return super.save(user);
     }
 
-    private boolean validateRegisterUser(User newUser) throws UserExistException, EmailExistException {
+    private boolean validateRegisterUser(UserDTO newUser) throws UserExistException, EmailExistException {
         String newUsername= newUser.getUsername();
         String newEmail= newUser.getEmail();
         User userNameExist = findByUsername(newUsername);

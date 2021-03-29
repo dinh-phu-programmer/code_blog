@@ -59,8 +59,7 @@ public class UserController {
             }
 
         }
-        User user = new User();
-        User newUserDTO = this.userService.register(user);
+        User user = this.userService.register(userDTO);
         return new ResponseEntity<>(user,HttpStatus.OK);
     }
 

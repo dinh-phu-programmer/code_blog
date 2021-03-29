@@ -3,15 +3,22 @@ package com.dinhphu.blog.model.dto;
 import com.dinhphu.blog.model.root.RootClass;
 import org.hibernate.validator.constraints.Length;
 
+
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
 
 public class UserDTO extends RootClass {
+
+
+    private String abc="asd";
     private Long id;
-    @NotNull
-    @Length(min = 2,max = 10,message="first name should be greater than 2")
+
+    @Length(min = 2,max = 10,message="{name.not.null}")
+//    @NotNull(message="{name.not.null}")
+//    @NotEmpty(message = "{name.not.empty}")
     private String firstName;
     private String lastName;
     private String username;
