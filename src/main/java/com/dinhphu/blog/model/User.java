@@ -2,7 +2,10 @@ package com.dinhphu.blog.model;
 
 import com.dinhphu.blog.model.root.RootClass;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
@@ -17,10 +20,12 @@ import java.util.Objects;
 )
 public class User extends RootClass implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, updatable = false)
     private Long id;
-    private String userId;
+
+    @NotNull
+    @Length(min = 2,max = 10,message="first name should be greater than 2")
     private String firstName;
     private String lastName;
     private String username;
@@ -38,9 +43,8 @@ public class User extends RootClass implements Serializable {
     public User() {
     }
 
-    public User(Long id, String userId, String firstName, String lastName, String username, String password, String email, String profileImageUrl, Date lastLoginDate, Date joinDate, String role, String[] authorities, boolean isActive, boolean isNotLocked) {
-        this.id = id;
-        this.userId = userId;
+    public User(Long id, Long id1, String firstName, String lastName, String username, String password, String email, String profileImageUrl, Date lastLoginDate, Date joinDate, String role, String[] authorities, boolean isActive, boolean isNotLocked) {
+        this.id = id1;
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -55,8 +59,7 @@ public class User extends RootClass implements Serializable {
         this.isNotLocked = isNotLocked;
     }
 
-    public User(String userId, String firstName, String lastName, String username, String password, String email, String profileImageUrl, Date lastLoginDate, Date joinDate, String role, String[] authorities, boolean isActive, boolean isNotLocked) {
-        this.userId = userId;
+    public User(String firstName, String lastName, String username, String password, String email, String profileImageUrl, Date lastLoginDate, Date joinDate, String role, String[] authorities, boolean isActive, boolean isNotLocked) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -79,13 +82,6 @@ public class User extends RootClass implements Serializable {
         this.id = id;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -185,9 +181,8 @@ public class User extends RootClass implements Serializable {
 
     @Override
     public String toString() {
-        return "Users{" +
+        return "User{" +
                 "id=" + id +
-                ", userId='" + userId + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", username='" + username + '\'' +
@@ -211,7 +206,6 @@ public class User extends RootClass implements Serializable {
         return isActive == user.isActive &&
                 isNotLocked == user.isNotLocked &&
                 Objects.equals(id, user.id) &&
-                Objects.equals(userId, user.userId) &&
                 Objects.equals(firstName, user.firstName) &&
                 Objects.equals(lastName, user.lastName) &&
                 Objects.equals(username, user.username) &&
@@ -226,7 +220,7 @@ public class User extends RootClass implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, userId, firstName, lastName, username, password, email, profileImageUrl, lastLoginDate, joinDate, role, isActive, isNotLocked);
+        int result = Objects.hash(id, firstName, lastName, username, password, email, profileImageUrl, lastLoginDate, joinDate, role, isActive, isNotLocked);
         result = 31 * result + Arrays.hashCode(authorities);
         return result;
     }

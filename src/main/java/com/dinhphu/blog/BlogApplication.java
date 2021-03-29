@@ -29,8 +29,8 @@ public class BlogApplication {
 	@Bean
 	public CommandLineRunner commandLineRunner(UserDao userDao){
 		return args->{
-//			for (int i =1 ;i<1000000;i++){
-//				User user = new User("useridd"+i,"dinh"+i,"phu"+i,"dinhphu"+i,"123",i+"dinhphu@gmail.com","",null,null,"ADMIN",null,true,false);
+//			for (int i =1 ;i<6;i++){
+//				User user = new User("dinh"+i,"phu"+i,"dinhphu"+i,"123",i+"dinhphu@gmail.com","",null,null,null,null,true,false);
 //				userDao.save(user);
 //			}
 

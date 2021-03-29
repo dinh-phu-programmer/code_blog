@@ -24,8 +24,6 @@ public abstract class CommonAction<T extends RootClass, ID extends Number, E ext
         this.jpaRepository = jpaRepository;
     }
 
-//    public abstract void setJpaRepository(E obj);
-
     public T save(T object) {
         return (T) jpaRepository.save(object);
     }
@@ -69,7 +67,6 @@ public abstract class CommonAction<T extends RootClass, ID extends Number, E ext
 
         return obj.get();
 
-
     }
 
     public Page<T> findAllWithPage(int page, int size, Optional<String> sortBy) {
@@ -79,5 +76,5 @@ public abstract class CommonAction<T extends RootClass, ID extends Number, E ext
         Page<T> obj = this.jpaRepository.findAll(pageable);
         return obj;
     }
-//    public abstract Page<T> findAllWithPage(int page, int size, Optional<String> sortBy);
+
 }

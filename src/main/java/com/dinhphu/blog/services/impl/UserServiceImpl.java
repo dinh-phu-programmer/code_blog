@@ -1,7 +1,9 @@
 package com.dinhphu.blog.services.impl;
 
 import com.dinhphu.blog.dao.UserDao;
+import com.dinhphu.blog.exception.specific.EmailExistException;
 import com.dinhphu.blog.exception.specific.ObjectNotFoundException;
+import com.dinhphu.blog.exception.specific.UserExistException;
 import com.dinhphu.blog.model.User;
 import com.dinhphu.blog.services.UserService;
 import com.dinhphu.blog.services.common.CommonAction;
@@ -14,6 +16,9 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static com.dinhphu.blog.constant.ExceptionMessageConstant.EMAIL_EXIST_EXCEPTION;
+import static com.dinhphu.blog.constant.ExceptionMessageConstant.USER_NAME_EXIST_EXCEPTION;
+
 @Service
 @Transactional
 public class UserServiceImpl extends CommonAction<User,Long,UserDao>  implements UserService {
@@ -24,8 +29,26 @@ public class UserServiceImpl extends CommonAction<User,Long,UserDao>  implements
     }
 
     @Override
-    public User register(User user) {
-        return null;
+    public User register(User user) throws UserExistException, EmailExistException {
+        validateRegisterUser(user);
+
+        return super.save(user);
+    }
+
+    private boolean validateRegisterUser(User newUser) throws UserExistException, EmailExistException {
+        String newUsername=newUser.getUsername();
+        String newEmail=newUser.getEmail();
+        User userNameExist= findByUsername(newUsername);
+        User emailExist=findByEmail(newEmail);
+
+        if (emailExist != null){
+            throw new EmailExistException(EMAIL_EXIST_EXCEPTION+" "+newEmail);
+        }
+
+        if (userNameExist != null){
+            throw new UserExistException(USER_NAME_EXIST_EXCEPTION+" "+newUsername);
+        }
+        return true;
     }
 
     @Override
@@ -83,4 +106,6 @@ public class UserServiceImpl extends CommonAction<User,Long,UserDao>  implements
     public Page<User> findAllWithPage(int page, int size, Optional<String> sortBy) {
        return super.findAllWithPage(page,size,sortBy);
     }
+
+
 }
