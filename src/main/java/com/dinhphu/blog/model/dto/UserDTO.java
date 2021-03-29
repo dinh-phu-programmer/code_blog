@@ -1,25 +1,17 @@
-package com.dinhphu.blog.model;
+package com.dinhphu.blog.model.dto;
 
 import com.dinhphu.blog.model.root.RootClass;
+import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
 
-@Entity(name = "Users")
-@Table(name = "users",
-        uniqueConstraints = {
-                @UniqueConstraint(name = "email_uniqueConstraint", columnNames = "email"),
-                @UniqueConstraint(name = "username_uniqueConstraint", columnNames = "username")
-        }
-)
-public class User extends RootClass implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, updatable = false)
+public class UserDTO extends RootClass {
     private Long id;
+    @NotNull
+    @Length(min = 2,max = 10,message="first name should be greater than 2")
     private String firstName;
     private String lastName;
     private String username;
@@ -33,12 +25,10 @@ public class User extends RootClass implements Serializable {
     private boolean isActive;
     private boolean isNotLocked;
 
-
-    public User() {
+    public UserDTO() {
     }
 
-    public User(Long id, Long id1, String firstName, String lastName, String username, String password, String email, String profileImageUrl, Date lastLoginDate, Date joinDate, String role, String[] authorities, boolean isActive, boolean isNotLocked) {
-        this.id = id1;
+    public UserDTO(String firstName, String lastName, String username, String password, String email, String profileImageUrl, Date lastLoginDate, Date joinDate, String role, String[] authorities, boolean isActive, boolean isNotLocked) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -53,7 +43,8 @@ public class User extends RootClass implements Serializable {
         this.isNotLocked = isNotLocked;
     }
 
-    public User(String firstName, String lastName, String username, String password, String email, String profileImageUrl, Date lastLoginDate, Date joinDate, String role, String[] authorities, boolean isActive, boolean isNotLocked) {
+    public UserDTO(Long id, String firstName, String lastName, String username, String password, String email, String profileImageUrl, Date lastLoginDate, Date joinDate, String role, String[] authorities, boolean isActive, boolean isNotLocked) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -68,14 +59,15 @@ public class User extends RootClass implements Serializable {
         this.isNotLocked = isNotLocked;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
-
 
     public String getFirstName() {
         return firstName;
@@ -175,7 +167,7 @@ public class User extends RootClass implements Serializable {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "UserDTO{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
@@ -196,20 +188,20 @@ public class User extends RootClass implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return isActive == user.isActive &&
-                isNotLocked == user.isNotLocked &&
-                Objects.equals(id, user.id) &&
-                Objects.equals(firstName, user.firstName) &&
-                Objects.equals(lastName, user.lastName) &&
-                Objects.equals(username, user.username) &&
-                Objects.equals(password, user.password) &&
-                Objects.equals(email, user.email) &&
-                Objects.equals(profileImageUrl, user.profileImageUrl) &&
-                Objects.equals(lastLoginDate, user.lastLoginDate) &&
-                Objects.equals(joinDate, user.joinDate) &&
-                Objects.equals(role, user.role) &&
-                Arrays.equals(authorities, user.authorities);
+        UserDTO userDTO = (UserDTO) o;
+        return isActive == userDTO.isActive &&
+                isNotLocked == userDTO.isNotLocked &&
+                Objects.equals(id, userDTO.id) &&
+                Objects.equals(firstName, userDTO.firstName) &&
+                Objects.equals(lastName, userDTO.lastName) &&
+                Objects.equals(username, userDTO.username) &&
+                Objects.equals(password, userDTO.password) &&
+                Objects.equals(email, userDTO.email) &&
+                Objects.equals(profileImageUrl, userDTO.profileImageUrl) &&
+                Objects.equals(lastLoginDate, userDTO.lastLoginDate) &&
+                Objects.equals(joinDate, userDTO.joinDate) &&
+                Objects.equals(role, userDTO.role) &&
+                Arrays.equals(authorities, userDTO.authorities);
     }
 
     @Override

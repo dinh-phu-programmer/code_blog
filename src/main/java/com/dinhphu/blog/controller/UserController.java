@@ -5,6 +5,7 @@ import com.dinhphu.blog.exception.specific.ObjectNotFoundException;
 import com.dinhphu.blog.exception.specific.UserExistException;
 import com.dinhphu.blog.exception.specific.UserFieldValidationException;
 import com.dinhphu.blog.model.User;
+import com.dinhphu.blog.model.dto.UserDTO;
 import com.dinhphu.blog.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -44,12 +45,12 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> findUserById(@PathVariable Long id) throws ObjectNotFoundException {
-        User user= this.userService.findById(id);
+        User user = this.userService.findById(id);
         return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<User> registerUser(@Valid @RequestBody User user, BindingResult theBinding) throws UserExistException, EmailExistException, UserFieldValidationException {
+    public ResponseEntity<User> registerUser(@Valid @RequestBody UserDTO userDTO, BindingResult theBinding) throws UserExistException, EmailExistException, UserFieldValidationException {
         if (theBinding.hasErrors()){
             List<ObjectError> errors=theBinding.getAllErrors();
 
@@ -58,8 +59,9 @@ public class UserController {
             }
 
         }
-        User newUser = this.userService.register(user);
-        return new ResponseEntity<>(newUser,HttpStatus.OK);
+        User user = new User();
+        User newUserDTO = this.userService.register(user);
+        return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
 }

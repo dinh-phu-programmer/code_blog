@@ -36,9 +36,9 @@ public class UserServiceImpl extends CommonAction<User,Long,UserDao>  implements
     }
 
     private boolean validateRegisterUser(User newUser) throws UserExistException, EmailExistException {
-        String newUsername=newUser.getUsername();
-        String newEmail=newUser.getEmail();
-        User userNameExist= findByUsername(newUsername);
+        String newUsername= newUser.getUsername();
+        String newEmail= newUser.getEmail();
+        User userNameExist = findByUsername(newUsername);
         User emailExist=findByEmail(newEmail);
 
         if (emailExist != null){
@@ -53,7 +53,7 @@ public class UserServiceImpl extends CommonAction<User,Long,UserDao>  implements
 
     @Override
     public User findByUsername(String username) {
-        User foundUser= this.jpaRepository.findByUsername(username);
+        com.dinhphu.blog.model.User foundUser = this.jpaRepository.findByUsername(username);
         if (foundUser != null){
             return foundUser;
         }else{
