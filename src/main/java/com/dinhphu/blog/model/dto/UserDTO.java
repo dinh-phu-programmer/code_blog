@@ -1,6 +1,7 @@
 package com.dinhphu.blog.model.dto;
 
 import com.dinhphu.blog.model.root.RootClass;
+import com.dinhphu.blog.validation.EmailConstraint;
 import org.hibernate.validator.constraints.Length;
 
 
@@ -12,8 +13,6 @@ import java.util.Objects;
 
 public class UserDTO extends RootClass {
 
-
-    private String abc="asd";
     private Long id;
 
     @Length(min = 2,max = 10,message="{name.not.null}")
@@ -23,6 +22,8 @@ public class UserDTO extends RootClass {
     private String lastName;
     private String username;
     private String password;
+    @NotNull(message="Email ís required")
+    @EmailConstraint(message="{email.invalid}")
     private String email;
     private String profileImageUrl;
     private Date lastLoginDate;
