@@ -2,6 +2,7 @@ package com.dinhphu.blog.model.dto;
 
 import com.dinhphu.blog.model.root.RootClass;
 import com.dinhphu.blog.validation.EmailConstraint;
+import com.dinhphu.blog.validation.FieldPasswordMatch;
 import org.hibernate.validator.constraints.Length;
 
 
@@ -11,6 +12,15 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
 
+@FieldPasswordMatch.List(
+        {
+                @FieldPasswordMatch(
+                        field = "password",
+                        fieldMatch = "confirmPassword",
+                        message="{password.not.match}"
+                )
+        }
+)
 public class UserDTO extends RootClass {
 
     private Long id;
@@ -22,7 +32,8 @@ public class UserDTO extends RootClass {
     private String lastName;
     private String username;
     private String password;
-    @NotNull(message="Email ís required")
+    private String confirmPassword;
+    @NotNull(message="{email.not.null}")
     @EmailConstraint(message="{email.invalid}")
     private String email;
     private String profileImageUrl;
@@ -65,6 +76,30 @@ public class UserDTO extends RootClass {
         this.authorities = authorities;
         this.isActive = isActive;
         this.isNotLocked = isNotLocked;
+    }
+
+    public UserDTO(@Length(min = 2, max = 10, message = "{name.not.null}") String firstName, String lastName, String username, String password, String confirmPassword, @NotNull(message = "{email.not.null}") String email, String profileImageUrl, Date lastLoginDate, Date joinDate, String role, String[] authorities, boolean isActive, boolean isNotLocked) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.password = password;
+        this.confirmPassword = confirmPassword;
+        this.email = email;
+        this.profileImageUrl = profileImageUrl;
+        this.lastLoginDate = lastLoginDate;
+        this.joinDate = joinDate;
+        this.role = role;
+        this.authorities = authorities;
+        this.isActive = isActive;
+        this.isNotLocked = isNotLocked;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 
     @Override
