@@ -24,9 +24,6 @@ public class BlogApplication  {
 	}
 
 
-
-
-
 	@Bean
 	public CommandLineRunner commandLineRunner(UserDao userDao){
 		return args->{
