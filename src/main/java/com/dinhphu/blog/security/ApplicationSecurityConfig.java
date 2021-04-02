@@ -1,11 +1,17 @@
 package com.dinhphu.blog.security;
 
+import com.dinhphu.blog.filter.JwtAccessDeniedHandler;
+import com.dinhphu.blog.filter.JwtAuthenticationEntryPoint;
+import com.dinhphu.blog.jwt.JwtConfig;
+import com.dinhphu.blog.jwt.JwtTokenVerifier;
+import com.dinhphu.blog.jwt.JwtUsernameAndPasswordAuthenticationFilter;
 import com.dinhphu.blog.services.UserService;
 import com.dinhphu.blog.services.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -16,6 +22,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.crypto.SecretKey;
+
 import static com.dinhphu.blog.constant.SecurityConstant.*;
 
 @Configuration
@@ -25,11 +33,26 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsService userDetailsService;
+    private final JwtConfig jwtConfig;
+    private final SecretKey secretKey;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Autowired
-    public ApplicationSecurityConfig(@Qualifier("userService") UserDetailsService userDetailsService, PasswordEncoder passwordEncoder){
-        this.userDetailsService=userDetailsService;
-        this.passwordEncoder=passwordEncoder;
+    public ApplicationSecurityConfig(@Qualifier("userService") UserDetailsService userDetailsService,
+                                     PasswordEncoder passwordEncoder,
+                                     JwtConfig jwtConfig,
+                                     SecretKey secretKey,
+                                     JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
+                                     JwtAccessDeniedHandler jwtAccessDeniedHandler
+                                     ) {
+        this.userDetailsService = userDetailsService;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtConfig = jwtConfig;
+        this.secretKey = secretKey;
+        this.jwtAuthenticationEntryPoint=jwtAuthenticationEntryPoint;
+        this.jwtAccessDeniedHandler=jwtAccessDeniedHandler;
     }
 
 
@@ -39,10 +62,16 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), this.jwtConfig, this.secretKey))
+                .addFilterAfter(new JwtTokenVerifier(this.jwtConfig, this.secretKey), JwtUsernameAndPasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers(PUBLIC_URLS).permitAll()
                 .anyRequest()
-                .authenticated();
+                .authenticated()
+                .and()
+                .exceptionHandling().accessDeniedHandler(this.jwtAccessDeniedHandler)
+                .authenticationEntryPoint(this.jwtAuthenticationEntryPoint)
+        ;
     }
 
     @Override
@@ -51,8 +80,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider(){
-        DaoAuthenticationProvider provider= new DaoAuthenticationProvider();
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(this.passwordEncoder);
         provider.setUserDetailsService(this.userDetailsService);
         return provider;
