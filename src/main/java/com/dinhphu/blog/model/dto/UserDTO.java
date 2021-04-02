@@ -25,11 +25,17 @@ public class UserDTO extends RootClass {
 
     private Long id;
 
-    @Length(min = 2,max = 10,message="{name.not.null}")
-//    @NotNull(message="{name.not.null}")
-//    @NotEmpty(message = "{name.not.empty}")
+    @Length(min = 2,max = 50,message="{name.length} min: {min} - max :{max}")
+    @NotNull(message="{name.not.null}")
+    @NotEmpty(message = "{name.not.empty}")
     private String firstName;
+    @Length(min = 2,max = 50,message="{name.length} min: {min} - max :{max}")
+    @NotNull(message="{name.not.null}")
+    @NotEmpty(message = "{name.not.empty}")
     private String lastName;
+    @Length(min = 2,max = 50,message="{username.length} min: {min} - max :{max}")
+    @NotNull(message="{username.not.null}")
+    @NotEmpty(message = "{username.not.empty}")
     private String username;
     private String password;
     private String confirmPassword;
